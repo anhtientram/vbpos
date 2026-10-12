@@ -1,0 +1,18 @@
+---
+description: Always reuse lib/presentations/widgets before creating new UI
+globs: lib/presentations/**/*.dart
+alwaysApply: false
+---
+
+# Shared widgets first
+
+Before creating any new widget:
+
+1. Search `lib/presentations/widgets/` (badge, button, card, search, input, form_review, popup, state, …).
+2. Reuse or extend what exists.
+3. Feature-local widget only if truly feature-specific.
+4. Promote to shared only when used (or clearly needed) in 2+ features.
+
+Do not copy search bars, badges, shimmer cards, empty/error states per module.
+
+Details: `.agents/rules/shared-widgets.md`

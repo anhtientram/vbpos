@@ -1,0 +1,124 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# Shared AI agent config (Cursor, Codex, others)
+# Keep .agents/ and AGENTS.md in git; ignore other local AI tooling
+.antigravity/
+.vscode/
+
+scripts/
+
+
+# Codex — ignore local state, keep shared skills/agents/rules in git
+.codex/*
+!.codex/skills/
+!.codex/skills/**
+
+# Cursor — ignore local state; commit shared rules + skills
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
+!.cursor/skills/
+!.cursor/skills/**
+
+# Markdown — ignore local notes; keep shared agent entry + .agents / cursor skill docs
+*.md
+!AGENTS.md
+!README.md
+!.agents/
+!.agents/**/*.md
+!.cursor/rules/**/*.mdc
+!.cursor/skills/**/*.md
+!.cursor/skills/**/*.mdc
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+devtools_options.yaml
+**/devtools_options.yaml
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Generated Dart/Flutter files
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+*.gr.dart
+lib/core/gen/
+lib/l10n/*
+!lib/l10n/intl_en.arb
+!lib/l10n/intl_vi.arb
+core/lib/**/gen/
+
+# Flutter/iOS generated files
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/Flutter/.last_build_id
+ios/Flutter/ephemeral/
+ios/Flutter/flutter_assets/
+ios/Runner/GeneratedPluginRegistrant.*
+
+ios/Pods/
+ios/.symlinks/
+ios/.generated/
+ios/build/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/ServiceDefinitions.json
+# Podfile + Podfile.lock must be tracked for CI (Pods/ stays ignored)
+# ios/Podfile
+# ios/Podfile.lock
+pubspec.lock
+
+# Local environment files
+.env
+.env.*
+!.env.example
+!.env.local.example
+
+# Flavor env files bundled as Flutter assets (API URLs, secrets)
+assets/env/*
+!assets/env/*.example
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# FVM Version Cache
+.fvm/
+
+docs/

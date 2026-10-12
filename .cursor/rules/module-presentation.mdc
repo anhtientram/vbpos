@@ -1,0 +1,27 @@
+---
+description: Presentation Cubit + Screen/View split + Result handling
+globs: lib/presentations/**/*.dart
+alwaysApply: false
+---
+
+# Presentation standard
+
+- Prefer **Cubit** + state via **`part` / `part of`** (warehouse: `part '*_state.dart'`). UI imports `*_cubit.dart` only. Avoid new Bloc god-files / many unrelated `part`s for create flows.
+- Every state **must** have a status `enum` (e.g. `initial, loading, success, error`) — branch UI on `state.status`.
+- Nested sub-state (e.g. call history) = extra `part` of the same cubit, with clear name prefixes.
+- **Screen** (`*_screen.dart`): provide Cubit (+ initial `load*`), navigation, dialogs — **call View and pass data + callbacks**. Main-tab lists: Cubit on Screen, not `main_page.dart` (expense/investor/debt now; contract stays on Main until refactor — `.agents/workflows/main-tab-cubit-ownership.md`). **Routes:** `GoRoute` → Screen ctor args only — no `BlocProvider` / `getIt` in `routes.dart` (`.agents/workflows/routes.md`).
+- **Entry loading:** menu tap → `showLoading` on current screen → fetch → `dismissLoading` → `push` (twin: Settings bank account). Avoid empty intermediate shells / View `CircularProgressIndicator`.
+- **View** (`components/*_view.dart`): **receive data only** and render — no fetch, no creating Cubit, no owning routes.
+- **Required:** `models/<feature>_model.dart` + `*_presentations_mapper.dart` — Cubit maps `*Entities` → UI models **in the same success block**; State/View bind models (twin: `warehouse-management/models/`). Not for route-pop DTOs. Do not keep `*Entities` on Cubit/State. After update that returns the item, map + emit — do not getMe ([`.agents/workflows/profile-and-user-identity.md`](../.agents/workflows/profile-and-user-identity.md)).
+- Call usecases via GetIt in Cubit; handle `result.isSuccess` / `result.error`.
+- App-wide dropdown/config caches: **Config Cubit fetches** + **Lookup Helper is cache-only** — see `.agents/workflows/app-config-lookup.md` (golden: asset-category; warehouse = owner + categories only, not the feature list API).
+- Errors: feature `AppLocalization` key or `errorOccurred` — never `'Failed to…'` / `'Unknown error'`.
+- **Always** search `lib/presentations/widgets/` before creating UI.
+- Register new screens in `routes.dart` as Screen ctor args only (no Cubit/`getIt` on the route); do not rename typo folders unless asked.
+
+Details: `.agents/rules/presentation-screen-view.md`, `.agents/rules/module-standard.md`, `.agents/rules/localization.md`, `.agents/rules/shared-widgets.md`  
+Refactor flow: `.agents/workflows/refactor-module.md`  
+Routes: `.agents/workflows/routes.md`  
+Config/lookup: `.agents/workflows/app-config-lookup.md`  
+Profile / user identity: `.agents/workflows/profile-and-user-identity.md`
+Tickets: `.agents/workflows/ticket.md`

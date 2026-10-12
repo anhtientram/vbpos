@@ -1,0 +1,12 @@
+---
+description: When the user asks for today's report, paste the Vietnamese standup from the daily-report workflow.
+alwaysApply: true
+---
+
+# Daily report
+
+Triggers: **report ngày hôm nay**, **report cuối ngày**, **gửi report**.
+
+Follow `.agents/workflows/daily-report.md`. Output the paste-ready message only (Vietnamese). Do not implement code.
+
+Fill from MODULES changelog (today), `git log --since=today`, and this-session work. Group by product task. Status: `done` / `in progress` / `blocked`.

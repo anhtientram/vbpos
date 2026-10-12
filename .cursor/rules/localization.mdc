@@ -1,0 +1,17 @@
+---
+description: Ban hardcoded user-facing strings — use AppLocalization + ARB
+globs: lib/**/*.dart
+alwaysApply: false
+---
+
+# No hardcoded UI copy
+
+User-facing text → `AppLocalization.current.*` only.
+
+**New copy:** add the same key to `lib/l10n/intl_vi.arb` **and** `lib/l10n/intl_en.arb`, then save (auto-gen). Never edit only one ARB / never hardcode EN/VI in Dart.
+
+Error fallback order: `Result.error` → **feature-specific** key → `errorOccurred`.
+
+When API success has no message (e.g. resend OTP), use a dedicated l10n key (e.g. `otpResentMessage`).
+
+Details: `.agents/rules/localization.md`

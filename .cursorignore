@@ -1,0 +1,25 @@
+# Build & cache
+.dart_tool/
+build/
+.fvm/
+# coverage/
+# android/.gradle/
+# android/app/build/
+# ios/Pods/
+# ios/build/
+
+# # Generated Dart
+# *.g.dart
+# *.freezed.dart
+# *.mocks.dart
+# *.gr.dart
+# lib/core/gen/
+
+# # Heavy non-Dart (agent rarely needs these)
+# ios/
+# *.html
+# assets/
+# pubspec.lock
+
+# # IDE / local
+# .idea/

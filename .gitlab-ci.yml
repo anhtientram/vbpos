@@ -1,0 +1,211 @@
+# B-Fin — GitLab CI/CD
+#
+# Trạng thái: TẮT (không chạy pipeline khi push).
+# Test local thay thế: bash scripts/ci/test_local.sh
+#
+# Để bật lại CI:
+#   1. Đổi workflow.rules từ `when: never` sang rule nhánh (xem comment bên dưới)
+#   2. Maintainer bật runner + CI/CD variables (ENV_DEV_API_BASE_URL, ...)
+# Chế độ hiện tại: CI TEST ONLY (analyze + test)
+# Chỉ chạy khi push lên nhánh CI (mặc định: `baonq/test-cicd`).
+# Đổi nhánh: Settings → CI/CD → Variables → CI_TARGET_BRANCH
+#
+# Để bật build/deploy lên Play Internal + TestFlight:
+#   1. Bỏ comment block "STORE PIPELINE" ở cuối file
+#   2. Thêm lại stages `build` và `deploy`
+#   3. Cấu hình signing, Play JSON key, App Store Connect API key, match...
+
+workflow:
+  rules:
+    - when: never
+    # Bật lại CI test trên nhánh cụ thể — thay block trên bằng:
+    # - if: $CI_COMMIT_BRANCH == $CI_TARGET_BRANCH
+
+stages:
+  - analyze
+  - test
+  # - build   # bật khi cần build artifact / deploy store
+  # - deploy
+
+variables:
+  CI_TARGET_BRANCH: "baonq/test-cicd"
+  FLUTTER_VERSION: "3.44.0"
+  PUB_CACHE: "$CI_PROJECT_DIR/.pub-cache"
+  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
+  FLUTTER_BUILD_TARGET: "lib/main_dev.dart"
+  FLUTTER_BUILD_FLAVOR: "dev"
+  AAB_PATH: "$CI_PROJECT_DIR/build/app/outputs/bundle/devRelease/app-dev-release.aab"
+
+default:
+  interruptible: true
+  cache:
+    key: "b-fin-pub-${FLUTTER_VERSION}"
+    paths:
+      - .pub-cache/
+      - .dart_tool/
+      - core/.dart_tool/
+    policy: pull-push
+
+# ---------------------------------------------------------------------------
+# Shared templates
+# ---------------------------------------------------------------------------
+.flutter_docker:
+  image: ghcr.io/cirruslabs/flutter:${FLUTTER_VERSION}
+
+.flutter_bootstrap:
+  before_script:
+    - chmod +x scripts/ci/*.sh
+    - bash scripts/ci/bootstrap.sh
+
+.ci_branch_rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_TARGET_BRANCH
+
+# =============================================================================
+# CI TEST PIPELINE (active)
+# =============================================================================
+
+analyze:
+  stage: analyze
+  extends:
+    - .flutter_docker
+    - .flutter_bootstrap
+    - .ci_branch_rules
+  script:
+    - flutter pub get
+    - cd core && flutter pub get && cd "$CI_PROJECT_DIR"
+    - flutter analyze --no-fatal-warnings --no-fatal-infos
+    - cd core && flutter analyze --no-fatal-warnings --no-fatal-infos
+    - cd "$CI_PROJECT_DIR"
+    - dart format --output=none --set-exit-if-changed .
+
+test:
+  stage: test
+  extends:
+    - .flutter_docker
+    - .ci_branch_rules
+  needs: [analyze]
+  before_script:
+    - chmod +x scripts/ci/*.sh
+    - bash scripts/ci/bootstrap.sh
+    - apt-get update -qq && apt-get install -y -qq python3-pip >/dev/null
+  script:
+    - flutter test --coverage
+    - bash scripts/ci/export_coverage.sh coverage/lcov.info
+  coverage: '/Total coverage: (\d+\.?\d*)%/'
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths:
+      - coverage/lcov.info
+      - coverage/cobertura.xml
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura.xml
+
+# =============================================================================
+# STORE PIPELINE (disabled — uncomment when ready to build/deploy)
+# =============================================================================
+#
+# Cần thêm lại vào `stages:`:
+#   - build
+#   - deploy
+#
+# Cần thêm lại cache paths (tùy chọn):
+#   - .gradle/caches/
+#   - .gradle/wrapper/
+#   - android/vendor/bundle/
+#   - ios/vendor/bundle/
+#
+# ---------------------------------------------------------------------------
+# build:android:aab:dev:
+#   stage: build
+#   extends:
+#     - .flutter_docker
+#     - .flutter_bootstrap
+#     - .ci_branch_rules
+#   needs: [analyze, test]
+#   script:
+#     - bash scripts/ci/setup_android_signing.sh
+#     - flutter build appbundle --release --flavor "$FLUTTER_BUILD_FLAVOR" -t "$FLUTTER_BUILD_TARGET"
+#     - ls -lh "$AAB_PATH"
+#   artifacts:
+#     expire_in: 7 days
+#     paths:
+#       - build/app/outputs/bundle/devRelease/*.aab
+#
+# build:ios:ipa:dev:
+#   stage: build
+#   tags: [macos]
+#   extends:
+#     - .ci_branch_rules
+#   needs: [analyze, test]
+#   before_script:
+#     - chmod +x scripts/ci/*.sh scripts/ios_pod_refresh.sh
+#     - bash scripts/ci/bootstrap.sh
+#     - bash scripts/ci/setup_app_store_connect_api_key.sh
+#     - bash scripts/ci/install_fastlane.sh ios
+#     - cd ios && bundle exec fastlane match appstore --readonly
+#     - cd ios && pod install
+#   script:
+#     - flutter build ipa --release --flavor "$FLUTTER_BUILD_FLAVOR" -t "$FLUTTER_BUILD_TARGET" --export-options-plist=ios/ExportOptions-appstore.plist
+#     - ls -lh build/ios/ipa/
+#     - echo "IPA_PATH=$(find build/ios/ipa -name '*.ipa' | head -1)" >> build.env
+#   artifacts:
+#     expire_in: 7 days
+#     reports:
+#       dotenv: build.env
+#     paths:
+#       - build/ios/ipa/*.ipa
+#
+# deploy:android:internal:
+#   stage: deploy
+#   extends:
+#     - .flutter_docker
+#     - .ci_branch_rules
+#   needs:
+#     - job: build:android:aab:dev
+#       artifacts: true
+#   before_script:
+#     - apt-get update -qq && apt-get install -y -qq ruby-full build-essential python3-pip >/dev/null
+#     - bash scripts/ci/install_fastlane.sh android
+#     - |
+#       if [[ -n "${PLAY_STORE_JSON_KEY:-}" && -f "${PLAY_STORE_JSON_KEY}" ]]; then
+#         export PLAY_STORE_JSON_KEY_PATH="$PLAY_STORE_JSON_KEY"
+#         export SUPPLY_JSON_KEY_DATA="$(cat "$PLAY_STORE_JSON_KEY")"
+#       elif [[ -n "${SUPPLY_JSON_KEY_DATA:-}" ]]; then
+#         export SUPPLY_JSON_KEY_DATA="$SUPPLY_JSON_KEY_DATA"
+#       else
+#         echo "Missing PLAY_STORE_JSON_KEY (file) or SUPPLY_JSON_KEY_DATA (variable)"
+#         exit 1
+#       fi
+#   script:
+#     - test -f "$AAB_PATH"
+#     - cd android && bundle exec fastlane deploy_internal
+#   environment:
+#     name: play-internal-dev
+#     url: https://play.google.com/console
+#
+# deploy:ios:testflight:
+#   stage: deploy
+#   tags: [macos]
+#   extends:
+#     - .ci_branch_rules
+#   needs:
+#     - job: build:ios:ipa:dev
+#       artifacts: true
+#   before_script:
+#     - chmod +x scripts/ci/*.sh
+#     - bash scripts/ci/setup_app_store_connect_api_key.sh
+#     - bash scripts/ci/install_fastlane.sh ios
+#     - |
+#       if [[ -z "${IPA_PATH:-}" ]]; then
+#         export IPA_PATH="$(find "$CI_PROJECT_DIR/build/ios/ipa" -name '*.ipa' | head -1)"
+#       fi
+#       test -f "$IPA_PATH"
+#   script:
+#     - cd ios && bundle exec fastlane beta
+#   environment:
+#     name: testflight-dev
+#     url: https://appstoreconnect.apple.com/

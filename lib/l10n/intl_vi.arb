@@ -1,0 +1,31 @@
+{
+  "@@locale": "vi",
+  "appName": "VBPos",
+  "sampleModuleTitle": "Module mẫu",
+  "sampleModuleDescription": "Mẫu CRUD tối giản để dùng làm chuẩn cho module mới.",
+  "sampleModuleHint": "Retrofit + json_serializable + Either left/right",
+  "sampleItemsTitle": "Danh sách mẫu",
+  "sampleItemName": "Tên mục",
+  "sampleItemDescription": "Mô tả",
+  "sampleItemNameHint": "Nhập tên mục",
+  "sampleItemDescriptionHint": "Nhập mô tả ngắn",
+  "sampleCreate": "Tạo mới",
+  "sampleSave": "Lưu",
+  "sampleCancel": "Hủy",
+  "sampleRefresh": "Tải lại",
+  "sampleEmpty": "Chưa có dữ liệu mẫu",
+  "sampleCreated": "Tạo mục mẫu thành công",
+  "sampleLoaded": "Đã tải dữ liệu mẫu",
+  "sampleLoadError": "Không thể tải dữ liệu mẫu",
+  "sampleCreateError": "Không thể tạo mục mẫu",
+  "sampleRequired": "Vui lòng nhập tên mục",
+  "errorOccurred": "Đã có lỗi xảy ra",
+  "retry": "Thử lại",
+  "close": "Đóng",
+  "apiEnvironment": "Môi trường API: {environment}",
+  "@apiEnvironment": {
+    "placeholders": {
+      "environment": { "type": "String" }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+---
+description: Result / Params / mapper module standard for data + domain layers
+globs: lib/data/**/*.dart,lib/domains/**/*.dart
+alwaysApply: false
+---
+
+# Data & domain standard
+
+Pipeline:
+
+`Params` → `Mapper.toRequest` → DS `Future<Result<*Response>>` → Repo propagates `Result` → Mapper `Result<*Entities>` → Usecase `Future<Result<...>>`
+
+- No `throw` / `null` as API failure — use `package:core` `Result`.
+- Never `throw Exception('Failed to load …')` — propagate `Result.error` (API message when available).
+- Domain inputs are `*Params`, not API DTOs.
+- Domain types: file `*_entities.dart`, class suffix **`Entities`** only — never `Entity` / `*_entity.dart`; no dual naming. Module not `done` while `*Entity` remains.
+- Request DTOs: `toJson()` only. Normalize search/order in **mapper** with `RequestQueryHelper` (`lib/core/helpers/request_query_helper.dart`).
+- Remote DS: after `Result.guardAsync`, use `BaseRepository.parseResponse` — no private `_parseResponse`.
+- Domain must not import `data` or `presentations`.
+- Prefer one usecase file per action.
+
+Details: `.agents/rules/module-standard.md`, `.agents/rules/localization.md`  
+Golden: `.agents/references/golden-modules.md`

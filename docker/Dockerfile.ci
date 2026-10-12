@@ -1,0 +1,20 @@
+# Local CI image — same Flutter base as GitLab CI (.gitlab-ci.yml).
+#
+# Build (from project root):
+#   docker build -f docker/Dockerfile.ci \
+#     --build-arg FLUTTER_VERSION=3.44.0 \
+#     -t b-fin-ci:3.44.0 .
+#
+# Or use: bash scripts/ci/test_docker.sh
+
+ARG FLUTTER_VERSION=3.44.0
+FROM ghcr.io/cirruslabs/flutter:${FLUTTER_VERSION}
+
+WORKDIR /app
+
+# For scripts/ci/export_coverage.sh (lcov-cobertura), same as GitLab test job.
+RUN apt-get update -qq \
+  && apt-get install -y -qq python3-pip \
+  && rm -rf /var/lib/apt/lists/*
+
+ENV PUB_CACHE=/app/.pub-cache

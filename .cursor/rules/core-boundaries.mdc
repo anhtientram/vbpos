@@ -1,0 +1,15 @@
+---
+description: Boundaries between package core/ and lib/core/
+globs: core/**/*.dart,lib/core/**/*.dart
+alwaysApply: false
+---
+
+# Core boundaries
+
+- `package:core` (`core/`): networking, `Result`, storage, low-level utils.
+- `lib/core/`: themes, env, gateway, app helpers.
+- Remote DS JSON: `BaseRepository.parseResponse` — no private `_parseResponse`.
+- Percent overlay: `WidgetUtils.showProgressLoading`. post/put/patch report `onSendProgress` when that overlay is visible.
+- HTTP send/receive have no client timeout; server **408** is timeout.
+
+Do not duplicate snackbar/utils across both. See `.agents/rules/core-boundaries.md`.

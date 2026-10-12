@@ -1,0 +1,31 @@
+{
+  "@@locale": "en",
+  "appName": "VBPos",
+  "sampleModuleTitle": "Sample module",
+  "sampleModuleDescription": "A small CRUD example to use as the baseline for new modules.",
+  "sampleModuleHint": "Retrofit + json_serializable + Either left/right",
+  "sampleItemsTitle": "Sample items",
+  "sampleItemName": "Name",
+  "sampleItemDescription": "Description",
+  "sampleItemNameHint": "Enter an item name",
+  "sampleItemDescriptionHint": "Enter a short description",
+  "sampleCreate": "Create",
+  "sampleSave": "Save",
+  "sampleCancel": "Cancel",
+  "sampleRefresh": "Refresh",
+  "sampleEmpty": "No sample data yet",
+  "sampleCreated": "Sample item created",
+  "sampleLoaded": "Sample data loaded",
+  "sampleLoadError": "Unable to load sample data",
+  "sampleCreateError": "Unable to create sample item",
+  "sampleRequired": "Please enter an item name",
+  "errorOccurred": "Something went wrong",
+  "retry": "Retry",
+  "close": "Close",
+  "apiEnvironment": "API environment: {environment}",
+  "@apiEnvironment": {
+    "placeholders": {
+      "environment": { "type": "String" }
+    }
+  }
+}

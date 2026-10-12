@@ -1,0 +1,80 @@
+name: vbpos
+description: "VBPos Flutter application"
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_easyloading: ^3.0.5
+  flutter_native_splash: ^2.4.7
+
+  core:
+    path: ./core
+  device_info_plus: ^12.3.0
+  dio: ^5.9.2
+  flutter_bloc: ^9.1.1
+  flutter_screenutil: ^5.9.3
+  flutter_svg: ^2.3.0
+  google_fonts: ^8.1.0
+  go_router: ^17.0.0
+  intl: ^0.20.2
+  json_annotation: ^4.12.0
+  retrofit: ^4.10.0
+  vector_graphics: ^1.1.19
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.15.0
+  flutter_gen_runner: ^5.14.1
+  flutter_launcher_icons: ^0.14.3
+  intl_utils: ^2.8.14
+  json_serializable: ^6.14.0
+  retrofit_generator: ^10.2.9
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/svg/
+    - assets/png/
+    - assets/env/
+  generate: true
+
+flutter_gen:
+  output: lib/core/gen/
+  line_length: 80
+  integrations:
+    flutter_svg: true
+    image: true
+  assets:
+    enabled: true
+    outputs:
+      class_name: Assets
+      package_parameter_enabled: false
+      style: dot-delimiter
+
+targets:
+  $default:
+    sources:
+      include:
+        - pubspec.yaml
+        - assets/**
+        - lib/**
+        - $package$
+    builders:
+      flutter_gen_runner:
+        options:
+          output: lib/core/gen/
+          line_length: 80
+
+flutter_intl:
+  enabled: true
+  output_dir: lib/l10n/gen
+  class_name: AppLocalization

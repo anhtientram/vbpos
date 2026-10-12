@@ -1,0 +1,11 @@
+{
+  "@@locale": "vi",
+  "languageCode": "vi",
+  "languageEN": "ENGLISH",
+  "languageVI": "VIETNAMESE",
+
+  "login": "Đăng Nhập",
+  "register": "Đăng Ký",
+  "enter_phone": "Nhập số điện thoại",
+  "password": "Mật khẩu"
+}

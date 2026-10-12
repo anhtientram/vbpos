@@ -1,0 +1,23 @@
+---
+description: GoRouter is a thin parser — Screen owns BlocProvider and getIt
+globs: lib/presentations/routes.dart
+alwaysApply: false
+---
+
+# Routes standard
+
+`lib/presentations/routes.dart` only parses path/extra into **Screen constructor args**.
+
+```
+GoRoute → XxxScreen(args) → Screen owns BlocProvider + getIt + load → View
+```
+
+**MAY:** `_buildPage(page: XxxScreen(...))`, typed extra, `onExit` confirm, `detailPopResultFromExtra`.
+
+**MUST NOT:** `BlocProvider` / `BlocProvider.value`, `getIt<UseCase>()`, construct Cubit/Bloc, route to a `*_view.dart`.
+
+Golden: `CustomerDetailScreen`, `AddEditExpenseScreen`, `BanksScreen`, `BankFormScreen`.
+
+Do not piecemeal-fix existing route providers unless adding a **new** route or the user asks for the routes one-pass.
+
+Full workflow: `.agents/workflows/routes.md`

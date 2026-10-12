@@ -1,0 +1,42 @@
+# frozen_string_literal: true
+
+default_platform(:android)
+
+platform :android do
+  desc "Upload dev App Bundle to Google Play Internal Testing track"
+  lane :deploy_internal do
+    aab_path = ENV.fetch("AAB_PATH") do
+      File.expand_path("../../build/app/outputs/bundle/devRelease/app-dev-release.aab", __dir__)
+    end
+
+    unless File.exist?(aab_path)
+      UI.user_error!("AAB not found at #{aab_path}. Run flutter build appbundle first.")
+    end
+
+    json_key_data = ENV["SUPPLY_JSON_KEY_DATA"]
+    json_key_file = ENV["PLAY_STORE_JSON_KEY_PATH"]
+
+    if json_key_data.to_s.empty? && json_key_file.to_s.empty?
+      UI.user_error!("Set SUPPLY_JSON_KEY_DATA or PLAY_STORE_JSON_KEY_PATH")
+    end
+
+    upload_params = {
+      package_name: "com.biexce.vbpos.app",
+      aab: aab_path,
+      track: "internal",
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_changelogs: true,
+      release_status: "completed"
+    }
+
+    if json_key_data.to_s.empty?
+      upload_params[:json_key] = json_key_file
+    else
+      upload_params[:json_key_data] = json_key_data
+    end
+
+    upload_to_play_store(upload_params)
+  end
+end

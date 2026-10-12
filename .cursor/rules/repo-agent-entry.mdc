@@ -1,0 +1,19 @@
+---
+description: b-fin-client agent entry — always read module progress and .agents standards
+alwaysApply: true
+---
+
+# Repo agent entry
+
+Before implementing or refactoring a feature module:
+
+1. Read `.agents/progress/MODULES.md` — follow **Refactor queue** (Phase A Entities polish → Phase B legacy → Phase C repo-wide zero `*Entity`). Respect `done`; do not skip to contract unless asked.
+2. **Read the matching `.agents/workflows/` file first** and implement from it. Feature behavior (profile identity, lookups, routes, …) lives in workflows — do not invent a parallel path. If the work is new behavior, add/update that workflow in the same session.
+3. Follow `.agents/rules/` plus that workflow.
+4. Copy patterns from golden modules in `.agents/references/golden-modules.md` (prefer modules with zero leftover `*Entity`).
+
+Architecture is **layer-first** (`lib/data`, `lib/domains`, `lib/presentations`) — do not introduce feature-first folder trees.
+
+**Absolute naming:** no new `XxxEntity` / `*_entity.dart`. End goal: `rg 'class \w+Entity\b' lib` → 0 hits.
+
+When a module meets the standard (including Entities gate), update `MODULES.md` via `.agents/workflows/mark-module-done.md`.

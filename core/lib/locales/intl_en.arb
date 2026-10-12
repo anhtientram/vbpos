@@ -1,0 +1,11 @@
+{
+  "@@locale": "en",
+  "languageCode": "en",
+  "languageEN": "ENGLISH",
+  "languageVI": "VIETNAMESE",
+
+  "login": "Login",
+  "register": "Register",
+  "enter_phone": "Enter phone number",
+  "password": "Password"
+}
