@@ -20,8 +20,8 @@ Core decisions:
 - Use `Either<Failure, T>` from `package:core` and return `left(...)` for
   failures or `right(...)` for successes.
 - Use Retrofit interfaces for HTTP and `json_serializable` DTOs. Generated
-  files are produced with `dart run build_runner build` and must not be edited
-  by hand.
+  files are produced with `dart run build_runner build --delete-conflicting-outputs`
+  and must not be edited by hand.
 - Domain classes use `XxxEntities` and `XxxParams`; do not add `Entity` or
   API-shaped request classes to the domain layer.
 - A Screen owns Cubit wiring, effects, dialogs, and navigation. A View receives
@@ -39,5 +39,7 @@ Core decisions:
   `DependencyInjection.init(...)` in `lib/di.dart`.
 - Keep environment files, localization generation, FlutterGen, launcher icon,
   and native splash generation working.
+- For adding, removing, upgrading, or troubleshooting packages, follow
+  `.agents/workflows/pub-dependencies.md`.
 
 The full workflows are in `.agents/workflows/`.

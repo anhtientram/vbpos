@@ -3,8 +3,8 @@
 Before declaring work complete:
 
 ```bash
-dart pub get
-dart run build_runner build
+flutter pub get
+dart run build_runner build --delete-conflicting-outputs
 dart run intl_utils:generate
 flutter analyze
 flutter test
@@ -20,5 +20,5 @@ rg 'package:b_fin|name: b_fin|com\.biexce\.bfin\.app' lib pubspec.yaml android i
 ```
 
 The first two searches must be empty. The rename search must be empty in app
-source/configuration. Review generated files are present and the local flavor
-opens with its mock sample data.
+source/configuration. Review generated files are present and the selected
+flavor opens the sample module successfully.

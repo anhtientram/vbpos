@@ -18,6 +18,7 @@ old B-Fin feature workflows were removed together with the old modules.
 - `new-module.md` — add a module by copying the sample module.
 - `refactor-module.md` — refactor an existing module without bypassing layers.
 - `data-layer.md` — Retrofit, DTO, generated JSON, mapper, and Either flow.
+- `pub-dependencies.md` — add, remove, upgrade, inspect, and verify Pub packages.
 - `presentation-layer.md` — Screen, View, Cubit, UI model, and status rules.
 - `localization.md` — add ARB keys and regenerate `AppLocalization`.
 - `shared-ui.md` — reuse or add basic widgets.

@@ -29,12 +29,28 @@ registered by `lib/di.dart` through `DependencyInjection`.
 ## Commands
 
 ```bash
-dart pub get
-dart run build_runner build
+flutter pub get
+dart run build_runner build --delete-conflicting-outputs
 dart run intl_utils:generate
 flutter analyze
 flutter test
 ```
+
+Add or remove packages with Pub instead of editing dependency sections by hand:
+
+```bash
+flutter pub add package_name
+flutter pub add package_name:^1.2.3
+flutter pub add --dev package_name
+flutter pub remove package_name
+flutter pub outdated
+flutter pub upgrade
+flutter pub deps --style=compact
+```
+
+The complete dependency workflow, including Flutter SDK packages, local path
+packages, CocoaPods refresh, generators, and recovery commands, is in
+`.agents/workflows/pub-dependencies.md`.
 
 Asset and native generation remain available:
 

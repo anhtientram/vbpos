@@ -23,7 +23,7 @@ Retrofit API → RemoteDataSource → RepositoryImpl → UseCase
 After changing annotations or DTO fields:
 
 ```bash
-dart run build_runner build
+dart run build_runner build --delete-conflicting-outputs
 ```
 
 Review generated diffs and run the data-layer tests.

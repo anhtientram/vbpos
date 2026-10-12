@@ -3,7 +3,7 @@
 Run these commands from the repository root:
 
 ```bash
-dart run build_runner build
+dart run build_runner build --delete-conflicting-outputs
 dart run intl_utils:generate
 dart run flutter_gen_runner
 dart run flutter_launcher_icons
